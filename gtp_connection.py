@@ -174,7 +174,6 @@ class GtpConnection():
     def num_sim_cmd(self, args):
         """ Return number of simulations of the Go Engine"""
         self.go_engine.sim = int(args[0])
-        print(self.go_engine.sim)
         self.respond()
 
     def clear_board_cmd(self, args):
@@ -240,8 +239,10 @@ class GtpConnection():
         else:
             self.respond("unknown")
     def policy_moves_cmd(self, args):
-        
-        return 
+        #Rough working of simulate.
+        color = "black" if self.board.current_player == BLACK else "white"
+        N = self.go_engine.simulate(self.board, color)
+        self.respond(N)
     def play_cmd(self, args):
         """
         play a move args[1] for given color args[0] in {'b','w'}
