@@ -47,6 +47,7 @@ class GtpConnection():
             "legal_moves": self.legal_moves_cmd,
             "policy": self.policy_cmd,
             "policy_moves": self.policy_moves_cmd,
+            
             "gogui-rules_game_id": self.gogui_rules_game_id_cmd,
             "gogui-rules_board_size": self.gogui_rules_board_size_cmd,
             "gogui-rules_legal_moves": self.gogui_rules_legal_moves_cmd,
