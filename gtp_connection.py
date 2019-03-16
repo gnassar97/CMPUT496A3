@@ -29,6 +29,7 @@ class GtpConnection():
         self._debug_mode = debug_mode
         self.go_engine = go_engine
         self.board = board
+        self.policytype = 'random'
         self.commands = {
             "protocol_version": self.protocol_version_cmd,
             "quit": self.quit_cmd,
@@ -43,6 +44,8 @@ class GtpConnection():
             "list_commands": self.list_commands_cmd,
             "play": self.play_cmd,
             "legal_moves": self.legal_moves_cmd,
+            "policy": self.policy_cmd,
+            "policy_moves": self.policy_moves_cmd,
             "gogui-rules_game_id": self.gogui_rules_game_id_cmd,
             "gogui-rules_board_size": self.gogui_rules_board_size_cmd,
             "gogui-rules_legal_moves": self.gogui_rules_legal_moves_cmd,
@@ -61,7 +64,9 @@ class GtpConnection():
             "known_command": (1, 'Usage: known_command CMD_NAME'),
             "genmove": (1, 'Usage: genmove {w,b}'),
             "play": (2, 'Usage: play {b,w} MOVE'),
-            "legal_moves": (1, 'Usage: legal_moves {w,b}')
+            "legal_moves": (1, 'Usage: legal_moves {w,b}'),
+            "policy": (1, 'Usage: policy type {random,rulebased}'),
+            "policy_moves":(1, 'Usage: Movetype movelist for current player')
         }
     
     def write(self, data):
@@ -212,6 +217,22 @@ class GtpConnection():
         sorted_moves = ' '.join(sorted(gtp_moves))
         self.respond(sorted_moves)
 
+    def policy_cmd(self, args):
+        try:
+            policytype = args[0].lower()
+        except:
+            self.respond("")
+        if policytype == 'random':
+            self.policytype = 'random'
+            self.respond("random")
+        elif policytype == 'rulebased':
+            self.policytype = 'rulebased'
+            self.respond("rulebased")
+        else:
+            self.respond("unknown")
+    def policy_moves_cmd(self, args):
+
+        return 
     def play_cmd(self, args):
         """
         play a move args[1] for given color args[0] in {'b','w'}
