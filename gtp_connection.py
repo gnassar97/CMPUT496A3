@@ -34,6 +34,7 @@ class GtpConnection():
             "protocol_version": self.protocol_version_cmd,
             "quit": self.quit_cmd,
             "name": self.name_cmd,
+            "num_sim": self.num_sim_cmd,
             "boardsize": self.boardsize_cmd,
             "showboard": self.showboard_cmd,
             "clear_board": self.clear_board_cmd,
@@ -66,7 +67,8 @@ class GtpConnection():
             "play": (2, 'Usage: play {b,w} MOVE'),
             "legal_moves": (1, 'Usage: legal_moves {w,b}'),
             "policy": (1, 'Usage: policy type {random,rulebased}'),
-            "policy_moves":(1, 'Usage: Movetype movelist for current player')
+            "policy_moves":(1, 'Usage: Movetype movelist for current player'),
+            "num_sim":(1,'Usage: num_sim #(e.g. num_sim 100 )')
         }
     
     def write(self, data):
@@ -167,6 +169,12 @@ class GtpConnection():
     def version_cmd(self, args):
         """ Return the version of the  Go engine """
         self.respond(self.go_engine.version)
+    
+    def num_sim_cmd(self, args):
+        """ Return number of simulations of the Go Engine"""
+        self.go_engine.sim = int(args[0])
+        print(self.go_engine.sim)
+        self.respond()
 
     def clear_board_cmd(self, args):
         """ clear the board """
@@ -231,7 +239,7 @@ class GtpConnection():
         else:
             self.respond("unknown")
     def policy_moves_cmd(self, args):
-
+        
         return 
     def play_cmd(self, args):
         """
