@@ -8,6 +8,7 @@ from simple_board import SimpleGoBoard
 import numpy as np
 import argparse
 import sys
+import operator
 
 class Gomoku():
     def __init__(self,sim, sim_rule):
@@ -21,22 +22,32 @@ class Gomoku():
         self.random_simulation = True if sim_rule == 'random' else False
 
 
-    def simulate(self,board,color):
+    def simulate(self,board):
         #Testing simulate with pseudocode with gtpconn.
         dictionaryWinCount = {}
         #DictionaryWinCount {Move:win}
         legal_moves = GoBoardUtil.generate_legal_moves_gomoku(board)
         numMoves = len(legal_moves)
+
+        #Base case, if game is already won. We cannot simulate.
+        gameCheck = board.check_game_end_gomoku()
+        if gameCheck[0] == True:
+            print("Game already won by", gameCheck[1])
+            return
+        #Otherwise we iterate over the legal moves.
         for i in legal_moves:
             #For each legal move.
             #Run this sim times.
             for j in range(sim):
+                move = board._point_to_coord(i)
                 #Need to implement simulateMove
-                win_count = self.simulateMove(i)
+                #print(i, move, board.current_player)
+                win_count = self.simulateMove(i,board,board.current_player)
+                #print(win_count)
             if(win_count > 0):
-                dictionaryWinCount[i] = win_count
+                dictionaryWinCount[i] = win_count+1
         
-        max_win = max(dictionaryWinCount, key=dictionaryWinCount.get)
+        max_win = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[0]
         
         #For i in dictionary;
             #Pick highest count. (Most winrate)
@@ -44,9 +55,26 @@ class Gomoku():
         #Return highest count move ("Generate move.")
         
         return max_win
-    def simulateMove(move):
+    def simulateMove(self, move, board, color):
+        boardToSimulate = board.copy()
         win_count = 0
-        #while true:
+        playerSimulationColor = board.current_player
+        print(color)
+        boardToSimulate.play_move_gomoku(move,color)
+        gameCheck = boardToSimulate.check_game_end_gomoku()
+        while gameCheck[0] == False:
+            legal_moves = GoBoardUtil.generate_legal_moves_gomoku(boardToSimulate)
+            if len(legal_moves) == 0:
+                break
+            newMove = GoBoardUtil.generate_random_move_gomoku(boardToSimulate)
+            boardToSimulate.play_move_gomoku(newMove, boardToSimulate.current_player)
+            gameCheck = boardToSimulate.check_game_end_gomoku()
+            print(gameCheck, GoBoardUtil.get_twoD_board(boardToSimulate),newMove)
+            if gameCheck[0] == True:
+                if gameCheck[1] == playerSimulationColor:
+                    #print("CurrentPlayerWon, adding in win",gameCheck[1], color)
+                    win_count += 1
+                break
             #Run simulation on board
             #if self.random_simulation == True:
                 #first play the move*

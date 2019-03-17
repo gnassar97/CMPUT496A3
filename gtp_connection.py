@@ -68,7 +68,6 @@ class GtpConnection():
             "play": (2, 'Usage: play {b,w} MOVE'),
             "legal_moves": (1, 'Usage: legal_moves {w,b}'),
             "policy": (1, 'Usage: policy type {random,rulebased}'),
-            "policy_moves":(1, 'Usage: Movetype movelist for current player'),
             "num_sim":(1,'Usage: num_sim #(e.g. num_sim 100 )')
         }
     
@@ -240,9 +239,10 @@ class GtpConnection():
             self.respond("unknown")
     def policy_moves_cmd(self, args):
         #Rough working of simulate.
-        color = "black" if self.board.current_player == BLACK else "white"
-        N = self.go_engine.simulate(self.board, color)
-        self.respond(N)
+        N = self.go_engine.simulate(self.board)
+        move_coord = point_to_coord(N, self.board.size)
+        move_as_string = format_point(move_coord)
+        self.respond(move_as_string)
     def play_cmd(self, args):
         """
         play a move args[1] for given color args[0] in {'b','w'}
