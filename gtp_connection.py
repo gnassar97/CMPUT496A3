@@ -174,7 +174,7 @@ class GtpConnection():
     def num_sim_cmd(self, args):
         """ Return number of simulations of the Go Engine"""
         self.go_engine.sim = int(args[0])
-        self.respond()
+        self.respond(self.go_engine.sim)
 
     def clear_board_cmd(self, args):
         """ clear the board """

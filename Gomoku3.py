@@ -25,14 +25,18 @@ class Gomoku():
         #Testing simulate with pseudocode with gtpconn.
         dictionaryWinCount = {}
         #DictionaryWinCount {Move:win}
-        N = GoBoardUtil.generate_legal_moves_gomoku(board)
-        print("Test")
-        #For each legal move.
+        legal_moves = GoBoardUtil.generate_legal_moves_gomoku(board)
+        numMoves = len(legal_moves)
+        for i in legal_moves:
+            #For each legal move.
             #Run this sim times.
-                #While (Gamestate != win/draw/lose):
-                    #Generate random move.
-                    #Until win/loss/draw.
-                    #If win, append to dictionary and add count, if exists +1 count.
+            for j in range(sim):
+                #Need to implement simulateMove
+                win_count = simulateMove(i)
+            if(win_count > 0):
+                dictionaryWinCount[i] = win_count
+        
+        max_win = max(dictionaryWinCount, key=dictionaryWinCount.get)
         
         #For i in dictionary;
             #Pick highest count. (Most winrate)
@@ -40,8 +44,17 @@ class Gomoku():
         #Return highest count move ("Generate move.")
         
         return N
-    def simulateMove():
-        return
+    def simulateMove(move):
+        #win_count = 0
+        #while true:
+            #Run simulation on board
+            #if self.random_simulation == True:
+                #first play the move*
+                #then play random moves until no legal moves left.
+                #check winner
+                #if winner = current player, add to win_count
+        
+        return win_count
     def get_move(self, board, color):
         return GoBoardUtil.generate_random_move_gomoku(board)
     
