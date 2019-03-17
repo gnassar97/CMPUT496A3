@@ -32,7 +32,7 @@ class Gomoku():
             #Run this sim times.
             for j in range(sim):
                 #Need to implement simulateMove
-                win_count = simulateMove(i)
+                win_count = self.simulateMove(i)
             if(win_count > 0):
                 dictionaryWinCount[i] = win_count
         
@@ -43,9 +43,9 @@ class Gomoku():
         
         #Return highest count move ("Generate move.")
         
-        return N
+        return max_win
     def simulateMove(move):
-        #win_count = 0
+        win_count = 0
         #while true:
             #Run simulation on board
             #if self.random_simulation == True:
