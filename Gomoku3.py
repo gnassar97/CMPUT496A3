@@ -36,19 +36,21 @@ class Gomoku():
             return
         #Otherwise we iterate over the legal moves.
         for i in legal_moves:
+            dictionaryWinCount[i] = 0
             #For each legal move.
             #Run this sim times.
             for j in range(sim):
                 move = board._point_to_coord(i)
+                
                 #Need to implement simulateMove
                 #print(i, move, board.current_player)
                 win_count = self.simulateMove(i,board,board.current_player)
                 #print(win_count)
-            if(win_count > 0):
-                dictionaryWinCount[i] = win_count+1
+                if(win_count > 0):
+                    dictionaryWinCount[i] += 1
         
         max_win = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[0]
-        
+        print(dictionaryWinCount)
         #For i in dictionary;
             #Pick highest count. (Most winrate)
         
@@ -62,6 +64,11 @@ class Gomoku():
         print(color)
         boardToSimulate.play_move_gomoku(move,color)
         gameCheck = boardToSimulate.check_game_end_gomoku()
+        if gameCheck[0] == True:
+            if gameCheck[1] == playerSimulationColor:
+                #print("CurrentPlayerWon, adding in win",gameCheck[1], color)
+                win_count += 1
+                
         while gameCheck[0] == False:
             legal_moves = GoBoardUtil.generate_legal_moves_gomoku(boardToSimulate)
             if len(legal_moves) == 0:
