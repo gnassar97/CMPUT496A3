@@ -59,14 +59,16 @@ class Gomoku():
                 if self.sim_rule == 'random':
                     win_count = self.simulateMoveRandom(i,board,board.current_player)
                     winType = 'Random'
+
+               	    if(win_count > 0):
+                    	dictionaryWinCount[i] += 1
                 elif self.sim_rule == 'rule_based':
-                    win_count = self.simulateMoveRuleBased(i,board,board.current_player)
+                    winType = self.simulateMoveRuleBased(i,board,board.current_player)
                 else:
                 	pass
                 	print('PASS LINE 66')
                 #print(win_count)
-                if(win_count > 0):
-                    dictionaryWinCount[i] += 1
+
                 #if(WINTRUE )
                 #break
         
@@ -76,38 +78,41 @@ class Gomoku():
             #Pick highest count. (Most winrate)
         
         #Return highest count move ("Generate move.")
-        max_win = []
-        if winTypeWin == True:
-            winTypeWin = False
-            print("Wintype win max win")
-            maxValue = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[1]
-            print(maxValue)
-            for i in dictionaryWinCount.keys():
-                if dictionaryWinCount[i] == maxValue:
-                    max_win.append(i)
-                    #max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
-                    print(max_win)
-            return max_win, 'Win'
-        #For the rest 3 we need to display the moves that caused the win to be blocked too?..
-        elif winTypeBlockWin == True:
-            winTypeBlockWin = False
-            return max_win, 'Block Win'
-        elif winTypeOpenFour == True:
-            winTypeOpenFour = False
-            return max_win, 'Open Four'
-        elif winTypeBlockOpenFour == True:
-            winTypeBlockOpenFour = False
-            return max_win, 'Block Open Four'
-        else:
-            maxValue = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[1]
-            print("RANDOM")
+        if len(legal_moves) > 0:
             max_win = []
-            for i in dictionaryWinCount.keys():
-                if dictionaryWinCount[i] == maxValue:
-                    max_win.append(i)
-                    #max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
-                    print(max_win)
-            return max_win, 'Random'
+            if winTypeWin == True:
+                winTypeWin = False
+                print("Wintype win max win")
+                maxValue = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[1]
+                print(maxValue)
+                for i in dictionaryWinCount.keys():
+                    if dictionaryWinCount[i] == maxValue:
+                        max_win.append(i)
+                        #max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
+                        print(max_win)
+                return max_win, 'Win'
+            #For the rest 3 we need to display the moves that caused the win to be blocked too?..
+            elif winTypeBlockWin == True:
+                winTypeBlockWin = False
+                return winType, 'BlockWin'
+            elif winTypeOpenFour == True:
+                winTypeOpenFour = False
+                return winType, 'OpenFour'
+            elif winTypeBlockOpenFour == True:
+                winTypeBlockOpenFour = False
+                return winType, 'BlockOpenFour'
+            else:
+                maxValue = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[1]
+                print("RANDOM")
+                max_win = []
+                for i in dictionaryWinCount.keys():
+                    if dictionaryWinCount[i] == maxValue:
+                        max_win.append(i)
+                        #max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
+                        print(max_win)
+                return max_win, 'Random'
+        else:
+            pass
 
     def simulateMoveRandom(self, move, board, color):
         boardToSimulate = board.copy()
@@ -159,19 +164,19 @@ class Gomoku():
             		block_win.append(move)
             		winTypeBlockWin = True
             		print("BLOCKWIN" + str(block_win))
-            		continue
+            		return block_win
 
             	elif boardToSimulate.point_check_game_end_gomoku(move,playerSimulationColor,4) == True:
             		open_four.append(move)
             		winTypeOpenFour = True
             		print("OPENFOUR" + str(open_four))
-            		continue
+            		return open_four
       		
             	elif boardToSimulate.point_check_game_end_gomoku(move,opponentSimulationColor,4) == True:
             		block_open_four.append(move)
             		winTypeBlockOpenFour = True
             		print("BLOCKOPENFOUR" + str(block_open_four))
-            		continue
+            		return block_open_four
 
             	else:
             		print("ELSE")

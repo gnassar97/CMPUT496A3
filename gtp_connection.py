@@ -239,14 +239,17 @@ class GtpConnection():
             self.respond("unknown")
     def policy_moves_cmd(self, args):
         #Rough working of simulate.
-        N = self.go_engine.simulate(self.board,self.policytype)
-        moveOutput = ""
-        for i in N[0]:
-            move_coord = point_to_coord(i, self.board.size)
-            move_as_string = format_point(move_coord)
-            moveOutput = moveOutput + " " + move_as_string
-        outputString = N[1] + moveOutput
-        self.respond(outputString)
+        try:
+            N = self.go_engine.simulate(self.board,self.policytype)
+            moveOutput = ""
+            for i in N[0]:
+                move_coord = point_to_coord(i, self.board.size)
+                move_as_string = format_point(move_coord)
+                moveOutput = moveOutput + " " + move_as_string
+                outputString = N[1] + moveOutput
+            self.respond(outputString)
+        except:
+            pass
     def play_cmd(self, args):
         """
         play a move args[1] for given color args[0] in {'b','w'}
