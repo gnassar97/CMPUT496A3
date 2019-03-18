@@ -36,7 +36,7 @@ class SimpleGoBoard(object):
             return False
             
         # General case: detect captures, suicide
-        opp_color = GoBoardUtil.opponent(color)
+        opp_color = GoBoardUtil.$nent(color)
         self.board[point] = color
         legal = True
         has_capture = self._detect_captures(point, opp_color)
@@ -380,6 +380,38 @@ class SimpleGoBoard(object):
         assert count <= 5
         return count == 5
     
+    # def _point_direction_check_connect_gomoko(self, point, shift,color,n):
+    #     """
+    #     Check if the point has connectn condition in a direction
+    #     for the game of Gomoko.
+    #     """
+    #     count = 1
+    #     d = shift
+    #     p = point
+    #     while True:
+    #         p = p + d
+    #         if self.board[p] == color:
+    #             count = count + 1
+    #             if count == n:
+    #                 break
+    #         else:
+    #             break
+    #     if count==n:
+    #         return True
+    #     d = -d
+    #     p = point
+    #     #print(count)
+    #     while True:
+    #         p = p + d
+    #         if self.board[p] == color:
+    #             count = count + 1
+    #             if count == n:
+    #                 break
+    #         else:
+    #             break
+    #     assert count <= n
+    #     return count == n
+
     def point_check_game_end_gomoku(self, point):
         """
             Check if the point causes the game end for the game of Gomoko.
@@ -402,6 +434,28 @@ class SimpleGoBoard(object):
         
         return False
     
+    # def point_check_game_end_gomoku(self, point,color,n):
+    #     """
+    #         Check if the point causes the game end for the game of Gomoko.
+    #         """
+    #     # check horizontal
+    #     if self._point_direction_check_connect_gomoko(point, 1,color,n):
+    #         return True
+        
+    #     # check vertical
+    #     if self._point_direction_check_connect_gomoko(point, self.NS,color,n):
+    #         return True
+        
+    #     # check y=x
+    #     if self._point_direction_check_connect_gomoko(point, self.NS + 1,color,n):
+    #         return True
+        
+    #     # check y=-x
+    #     if self._point_direction_check_connect_gomoko(point, self.NS - 1,color,n):
+    #         return True
+        
+    #     return False
+
     def check_game_end_gomoku(self):
         """
             Check if the game ends for the game of Gomoku.
@@ -418,3 +472,20 @@ class SimpleGoBoard(object):
                 return True, BLACK
 
         return False, None
+
+    # def check_game_end_gomoku(self):
+    #     """
+    #         Check if the game ends for the game of Gomoku.
+    #         """
+    #     white_points = where1d(self.board == WHITE)
+    #     black_points = where1d(self.board == BLACK)
+        
+    #     for point in white_points:
+    #         if self.point_check_game_end_gomoku(point,WHITE,5):
+    #             return True, WHITE
+    
+    #     for point in black_points:
+    #         if self.point_check_game_end_gomoku(point,BLACK,5):
+    #             return True, BLACK
+
+    #     return False, None
