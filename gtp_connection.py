@@ -232,8 +232,8 @@ class GtpConnection():
         if policytype == 'random':
             self.policytype = 'random'
             self.respond("random")
-        elif policytype == 'rulebased':
-            self.policytype = 'rulebased'
+        elif policytype == 'rule_based':
+            self.policytype = 'rule_based'
             self.respond("rulebased")
         else:
             self.respond("unknown")

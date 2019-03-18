@@ -59,8 +59,11 @@ class Gomoku():
                 if self.sim_rule == 'random':
                     win_count = self.simulateMoveRandom(i,board,board.current_player)
                     winType = 'Random'
-                else:
+                elif self.sim_rule == 'rule_based':
                     win_count = self.simulateMoveRuleBased(i,board,board.current_player)
+                else:
+                	pass
+                	print('PASS LINE 66')
                 #print(win_count)
                 if(win_count > 0):
                     dictionaryWinCount[i] += 1
@@ -73,12 +76,12 @@ class Gomoku():
             #Pick highest count. (Most winrate)
         
         #Return highest count move ("Generate move.")
+        max_win = []
         if winTypeWin == True:
             winTypeWin = False
             print("Wintype win max win")
             maxValue = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[1]
             print(maxValue)
-            max_win = []
             for i in dictionaryWinCount.keys():
                 if dictionaryWinCount[i] == maxValue:
                     max_win.append(i)
@@ -132,7 +135,11 @@ class Gomoku():
         global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour
         boardToSimulate = board.copy()
         win_count = 0
+        block_win = []
+        open_four = []
+        block_open_four = []
         playerSimulationColor = board.current_player
+        opponentSimulationColor = GoBoardUtil.opponent(playerSimulationColor)
         boardToSimulate.play_move_gomoku(move,color)
         #WIN FIND IF A MOVE CAN INSTANTLY WIN.
         gameCheck = boardToSimulate.check_game_end_gomoku()
@@ -146,7 +153,30 @@ class Gomoku():
             legal_moves = GoBoardUtil.generate_legal_moves_gomoku(boardToSimulate)
             if len(legal_moves) == 0:
                 break
-            #for i in legal_moves:
+            for i in legal_moves:
+
+            	if boardToSimulate.point_check_game_end_gomoku(move,opponentSimulationColor,5) == True:
+            		block_win.append(move)
+            		winTypeBlockWin = True
+            		print("BLOCKWIN" + str(block_win))
+            		continue
+
+            	elif boardToSimulate.point_check_game_end_gomoku(move,playerSimulationColor,4) == True:
+            		open_four.append(move)
+            		winTypeOpenFour = True
+            		print("OPENFOUR" + str(open_four))
+            		continue
+      		
+            	elif boardToSimulate.point_check_game_end_gomoku(move,opponentSimulationColor,4) == True:
+            		block_open_four.append(move)
+            		winTypeBlockOpenFour = True
+            		print("BLOCKOPENFOUR" + str(block_open_four))
+            		continue
+
+            	else:
+            		print("ELSE")
+            		pass
+
                 #IF i causes to block win. APPEND TO BLOCK WIN LIST, SET BLOCKWIN FLAG TO TRUE. "CONTINUE THE LOOP."
                 #
                 #IF i causes to open four. APPEND TO APPROPRIATE LIST, SET FLAG, CONTINUE.
@@ -192,9 +222,12 @@ def parse_args():
     sim = args.sim
     sim_rule = args.simrule
 
-    if sim_rule != "random" and sim_rule != "rulebased":
+    if sim_rule != "random" and sim_rule != "rule_based":
         print('simrule must be random or rulebased')
         sys.exit(0)
+
+    print(sim)
+    print(sim_rule)
 
     return sim, sim_rule
     
