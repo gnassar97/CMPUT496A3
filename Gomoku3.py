@@ -92,7 +92,14 @@ class Gomoku():
             winTypeBlockOpenFour = False
             return max_win, 'Block Open Four'
         else:
-            max_win = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[0]
+            maxValue = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[1]
+            print("RANDOM")
+            max_win = []
+            for i in dictionaryWinCount.keys():
+                if dictionaryWinCount[i] == maxValue:
+                    max_win.append(i)
+                    #max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
+                    print(max_win)
             return max_win, 'Random'
 
     def simulateMoveRandom(self, move, board, color):
