@@ -147,9 +147,13 @@ class Gomoku():
             if len(legal_moves) == 0:
                 break
             #for i in legal_moves:
-                #IF i causes to block win. play that move. break out of for loop.
-                #IF i causes to open four. play that move. break..
-                #IF i causes to block open four, play that move.. break..
+                #IF i causes to block win. APPEND TO BLOCK WIN LIST, SET BLOCKWIN FLAG TO TRUE. "CONTINUE THE LOOP."
+                #
+                #IF i causes to open four. APPEND TO APPROPRIATE LIST, SET FLAG, CONTINUE.
+                #IF i causes to block open APPEND TO APPROPRIATE LIST, SET FLAG, CONTINUE.
+
+                #Continue just goes to the next iteration without running code below. 
+                
                 #ELSE.. just generate move randomly as usual and play that move. Don't forget to break out of for loop
                 #Need to implement a queue to see what flag got triggered first and then set that?
             #else random..
