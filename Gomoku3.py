@@ -19,6 +19,7 @@ class Gomoku():
         self.name = "GomokuAssignment3"
         self.version = 1.0
         self.sim = sim
+        self.sim_rule = sim_rule
         self.random_simulation = True if sim_rule == 'random' else False
 
 
@@ -44,11 +45,15 @@ class Gomoku():
                 
                 #Need to implement simulateMove
                 #print(i, move, board.current_player)
-                win_count = self.simulateMove(i,board,board.current_player)
+                if self.sim_rule == 'random':
+                    win_count = self.simulateMoveRandom(i,board,board.current_player)
+                else:
+                    win_count, winType = self.simulateMoveRuleBased(i,board,board.current_player)
                 #print(win_count)
                 if(win_count > 0):
                     dictionaryWinCount[i] += 1
-        
+                #if(WINTRUE )
+                #break
         max_win = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[0]
         print(dictionaryWinCount)
         #For i in dictionary;
@@ -57,18 +62,16 @@ class Gomoku():
         #Return highest count move ("Generate move.")
         
         return max_win
-    def simulateMove(self, move, board, color):
+    def simulateMoveRandom(self, move, board, color):
         boardToSimulate = board.copy()
         win_count = 0
         playerSimulationColor = board.current_player
-        print(color)
         boardToSimulate.play_move_gomoku(move,color)
         gameCheck = boardToSimulate.check_game_end_gomoku()
         if gameCheck[0] == True:
             if gameCheck[1] == playerSimulationColor:
                 #print("CurrentPlayerWon, adding in win",gameCheck[1], color)
                 win_count += 1
-
         while gameCheck[0] == False:
             legal_moves = GoBoardUtil.generate_legal_moves_gomoku(boardToSimulate)
             if len(legal_moves) == 0:
@@ -79,16 +82,16 @@ class Gomoku():
             print(gameCheck, GoBoardUtil.get_twoD_board(boardToSimulate),newMove)
             if gameCheck[0] == True:
                 if gameCheck[1] == playerSimulationColor:
-                    #print("CurrentPlayerWon, adding in win",gameCheck[1], color)
                     win_count += 1
                 break
-            #Run simulation on board
-            #if self.random_simulation == True:
-                #first play the move*
-                #then play random moves until no legal moves left.
-                #check winner
-                #if winner = current player, add to win_count
-        
+            #ELSE:
+                #CHECK FOR WIN.
+                #IF WIN FOUND: RETURN FOR THAT MOVE.
+                # BREAK
+                #BLOCK WIN..
+                #OPEN FOUR..
+                #BLOCK OPEN FOUR..
+                #RANDOM. 
         return win_count
     def get_move(self, board, color):
         return GoBoardUtil.generate_random_move_gomoku(board)
