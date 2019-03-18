@@ -12,8 +12,11 @@ import operator
 
 winTypeWin = False
 winTypeBlockWin = False
+BlockWinMoves = []
 winTypeOpenFour = False
+OpenFourMoves = []
 winTypeBlockOpenFour = False
+BlockOpenFourMoves = []
 
 
 class Gomoku():
@@ -82,6 +85,7 @@ class Gomoku():
                     #max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
                     print(max_win)
             return max_win, 'Win'
+        #For the rest 3 we need to display the moves that caused the win to be blocked too?..
         elif winTypeBlockWin == True:
             winTypeBlockWin = False
             return max_win, 'Block Win'
@@ -110,7 +114,6 @@ class Gomoku():
         gameCheck = boardToSimulate.check_game_end_gomoku()
         if gameCheck[0] == True:
             if gameCheck[1] == playerSimulationColor:
-                #print("CurrentPlayerWon, adding in win",gameCheck[1], color)
                 win_count += 1
         while gameCheck[0] == False:
             legal_moves = GoBoardUtil.generate_legal_moves_gomoku(boardToSimulate)
@@ -124,14 +127,6 @@ class Gomoku():
                 if gameCheck[1] == playerSimulationColor:
                     win_count += 1
                 break
-            #ELSE:
-                #CHECK FOR WIN.
-                #IF WIN FOUND: RETURN FOR THAT MOVE.
-                # BREAK
-                #BLOCK WIN..
-                #OPEN FOUR..
-                #BLOCK OPEN FOUR..
-                #RANDOM. 
         return win_count
     def simulateMoveRuleBased(self, move, board, color):
         global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour
@@ -146,10 +141,26 @@ class Gomoku():
                 #print("CurrentPlayerWon, adding in win",gameCheck[1], color)
                 win_count += 1
                 winTypeWin = True
-        #OPEN 4.
-        #if point_check_game_end_gomoku(self,move,boardToSimulate.current_player,4) == True:
-        #    win_count = win_count + 1
-        #    winTypeWin = True
+        #OTHERWISE USE WHILE LOOP TO CHECK IF WE CAN BLOCK THE OPP WIN/OPEN FOUR/BLOCK OPEN FOUR..
+        while gameCheck[0] == False:
+            legal_moves = GoBoardUtil.generate_legal_moves_gomoku(boardToSimulate)
+            if len(legal_moves) == 0:
+                break
+            #for i in legal_moves:
+                #IF i causes to block win. play that move. break out of for loop.
+                #IF i causes to open four. play that move. break..
+                #IF i causes to block open four, play that move.. break..
+                #ELSE.. just generate move randomly as usual and play that move. Don't forget to break out of for loop
+                #Need to implement a queue to see what flag got triggered first and then set that?
+            #else random..
+            newMove = GoBoardUtil.generate_random_move_gomoku(boardToSimulate)
+            boardToSimulate.play_move_gomoku(newMove, boardToSimulate.current_player)
+            gameCheck = boardToSimulate.check_game_end_gomoku()
+            print(gameCheck, GoBoardUtil.get_twoD_board(boardToSimulate),newMove)
+            if gameCheck[0] == True:
+                if gameCheck[1] == playerSimulationColor:
+                    win_count += 1
+                break
 
         return win_count
 
