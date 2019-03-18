@@ -489,3 +489,41 @@ class SimpleGoBoard(object):
                 return True, BLACK
 
         return False, None
+
+
+    # # Returnns a list of points that will be attempted as next moves
+    # def getBorderPoints(self):
+    #     # returns a list of all the points surrounding current points that are empty
+    #     surrounding=[0]*len(self.points)
+    #     for i in range(len(self.points)):
+    #         a=self._neighbors(self.points[i])
+    #         b=self._diag_neighbors(self.points[i])
+    #         surrounding[i]=np.array(a+b)
+    #     surrounding=tuple(surrounding)
+
+    #     border=reduce(np.union1d,(surrounding))
+    #     border=list(border)
+    #     j=0
+    #     while j<len(border):
+    #         if self.board[border[j]]!=0:
+    #             border.remove(border[j])
+    #         else:
+    #             j+=1
+    #     moves=[]
+    #     color=self.current_player
+    #     opp=GoBoardUtil.opponent(color)
+    #     # From the border points, choose the best ones
+    #     # Algorithm: current 5? opponent 5? cur 4? opp 4? curr 3? opp 3? curr 2? opp 2?
+    #     for i in range(5,1,-1):
+    #         for j in border:
+    #             if self.point_check_game_end_gomoku(j,color,i):
+    #                 moves.append(j)
+    #         if len(moves)>0:
+    #             break
+    #         for j in border:
+    #             if self.point_check_game_end_gomoku(j,opp,i):
+    #                 moves.append(j)
+    #         if len(moves)>0:
+    #             break
+    #     #print(moves)
+    #     return moves
