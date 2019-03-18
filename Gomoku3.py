@@ -29,9 +29,10 @@ class Gomoku():
         self.random_simulation = True if sim_rule == 'random' else False
 
 
-    def simulate(self,board):
+    def simulate(self,board,policytype):
         global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour
         #Testing simulate with pseudocode with gtpconn.
+        self.sim_rule = policytype
         dictionaryWinCount = {}
         #DictionaryWinCount {Move:win}
         legal_moves = GoBoardUtil.generate_legal_moves_gomoku(board)
@@ -56,20 +57,44 @@ class Gomoku():
                     win_count = self.simulateMoveRandom(i,board,board.current_player)
                     winType = 'Random'
                 else:
-                    win_count, winType = self.simulateMoveRuleBased(i,board,board.current_player)
+                    win_count = self.simulateMoveRuleBased(i,board,board.current_player)
                 #print(win_count)
                 if(win_count > 0):
                     dictionaryWinCount[i] += 1
                 #if(WINTRUE )
                 #break
-        max_win = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[0]
+        
+        #print(self.sim_rule, policytype)
         print(dictionaryWinCount)
         #For i in dictionary;
             #Pick highest count. (Most winrate)
         
         #Return highest count move ("Generate move.")
+        if winTypeWin == True:
+            winTypeWin = False
+            print("Wintype win max win")
+            maxValue = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[1]
+            print(maxValue)
+            max_win = []
+            for i in dictionaryWinCount.keys():
+                if dictionaryWinCount[i] == maxValue:
+                    max_win.append(i)
+                    #max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
+                    print(max_win)
+            return max_win, 'Win'
+        elif winTypeBlockWin == True:
+            winTypeBlockWin = False
+            return max_win, 'Block Win'
+        elif winTypeOpenFour == True:
+            winTypeOpenFour = False
+            return max_win, 'Open Four'
+        elif winTypeBlockOpenFour == True:
+            winTypeBlockOpenFour = False
+            return max_win, 'Block Open Four'
+        else:
+            max_win = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[0]
+            return max_win, 'Random'
 
-        return max_win, winType
     def simulateMoveRandom(self, move, board, color):
         boardToSimulate = board.copy()
         win_count = 0
@@ -115,11 +140,11 @@ class Gomoku():
                 win_count += 1
                 winTypeWin = True
         #OPEN 4.
-        if point_check_game_end_gomoku(self,move,boardToSimulate.current_player,4) == True:
-            win_count = win_count + 1
-            winTypeWin = True
+        #if point_check_game_end_gomoku(self,move,boardToSimulate.current_player,4) == True:
+        #    win_count = win_count + 1
+        #    winTypeWin = True
 
-        return win_count, winType
+        return win_count
 
     def get_move(self, board, color):
         return GoBoardUtil.generate_random_move_gomoku(board)
