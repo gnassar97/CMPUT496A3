@@ -240,9 +240,10 @@ class GtpConnection():
     def policy_moves_cmd(self, args):
         #Rough working of simulate.
         N = self.go_engine.simulate(self.board)
-        move_coord = point_to_coord(N, self.board.size)
+        move_coord = point_to_coord(N[0], self.board.size)
         move_as_string = format_point(move_coord)
-        self.respond(move_as_string)
+        outputString = N[1] + " " + move_as_string
+        self.respond(outputString)
     def play_cmd(self, args):
         """
         play a move args[1] for given color args[0] in {'b','w'}

@@ -491,6 +491,8 @@ class SimpleGoBoard(object):
         return False, None
 
 
+
+
     # # Returnns a list of points that will be attempted as next moves
     # def getBorderPoints(self):
     #     # returns a list of all the points surrounding current points that are empty

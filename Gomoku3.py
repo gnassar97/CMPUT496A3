@@ -10,6 +10,12 @@ import argparse
 import sys
 import operator
 
+winTypeWin = False
+winTypeBlockWin = False
+winTypeOpenFour = False
+winTypeBlockOpenFour = False
+
+
 class Gomoku():
     def __init__(self,sim, sim_rule):
         """
@@ -24,6 +30,7 @@ class Gomoku():
 
 
     def simulate(self,board):
+        global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour
         #Testing simulate with pseudocode with gtpconn.
         dictionaryWinCount = {}
         #DictionaryWinCount {Move:win}
@@ -47,6 +54,7 @@ class Gomoku():
                 #print(i, move, board.current_player)
                 if self.sim_rule == 'random':
                     win_count = self.simulateMoveRandom(i,board,board.current_player)
+                    winType = 'Random'
                 else:
                     win_count, winType = self.simulateMoveRuleBased(i,board,board.current_player)
                 #print(win_count)
@@ -60,8 +68,8 @@ class Gomoku():
             #Pick highest count. (Most winrate)
         
         #Return highest count move ("Generate move.")
-        
-        return max_win
+
+        return max_win, winType
     def simulateMoveRandom(self, move, board, color):
         boardToSimulate = board.copy()
         win_count = 0
@@ -93,6 +101,26 @@ class Gomoku():
                 #BLOCK OPEN FOUR..
                 #RANDOM. 
         return win_count
+    def simulateMoveRuleBased(self, move, board, color):
+        global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour
+        boardToSimulate = board.copy()
+        win_count = 0
+        playerSimulationColor = board.current_player
+        boardToSimulate.play_move_gomoku(move,color)
+        #WIN FIND IF A MOVE CAN INSTANTLY WIN.
+        gameCheck = boardToSimulate.check_game_end_gomoku()
+        if gameCheck[0] == True:
+            if gameCheck[1] == playerSimulationColor:
+                #print("CurrentPlayerWon, adding in win",gameCheck[1], color)
+                win_count += 1
+                winTypeWin = True
+        #OPEN 4.
+        if point_check_game_end_gomoku(self,move,boardToSimulate.current_player,4) == True:
+            win_count = win_count + 1
+            winTypeWin = True
+
+        return win_count, winType
+
     def get_move(self, board, color):
         return GoBoardUtil.generate_random_move_gomoku(board)
     
