@@ -100,7 +100,7 @@ class Gomoku():
 				return OpenFourMoves, 'OpenFour'
 			elif winTypeBlockOpenFour == True:
 				winTypeBlockOpenFour = False
-				return winType, 'BlockOpenFour'
+				return BlockOpenFourMoves, 'BlockOpenFour'
 			else:
 				maxValue = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[1]
 				print("RANDOM")
@@ -153,24 +153,27 @@ class Gomoku():
 		#OTHERWISE USE WHILE LOOP TO CHECK IF WE CAN BLOCK THE OPP WIN/OPEN FOUR/BLOCK OPEN FOUR..
 		legal_moves = GoBoardUtil.generate_legal_moves_gomoku(boardToSimulate)
 		if len(legal_moves) == 0:
-			break
+			return
 		for i in legal_moves:
 			if boardToSimulate.point_check_game_end_gomoku(move,opponentSimulationColor,5) == True:
-				BlockWinMoves.append(move)
+				if move not in BlockWinMoves:
+					BlockWinMoves.append(move)
 				winTypeBlockWin = True
-				print("BLOCKWIN" + str(block_win))
+				print("BLOCKWIN" + str(BlockWinMoves))
 				return
 
 			elif boardToSimulate.point_check_game_end_gomoku(move,playerSimulationColor,4) == True:
-				OpenFourMoves.append(move)
+				if move not in OpenFourMoves:
+					OpenFourMoves.append(move)
 				winTypeOpenFour = True
-				print("OPENFOUR" + str(open_four))
+				print("OPENFOUR" + str(OpenFourMoves))
 				continue 
 		
 			elif boardToSimulate.point_check_game_end_gomoku(move,opponentSimulationColor,4) == True:
-				BlockOpenFourMoves.append(move)
+				if move not in BlockOpenFourMoves:
+					BlockOpenFourMoves.append(move)
 				winTypeBlockOpenFour = True
-				print("BLOCKOPENFOUR" + str(block_open_four))
+				print("BLOCKOPENFOUR" + str(BlockOpenFourMoves))
 				continue
 
 			else:
@@ -191,8 +194,8 @@ class Gomoku():
 		#Keeps randomly simulating. 
 		while gameCheck[0] == False:
 			legal_moves = GoBoardUtil.generate_legal_moves_gomoku(boardToSimulate)
-				if len(legal_moves) == 0:
-					break	
+			if len(legal_moves) == 0:
+				break
 			newMove = GoBoardUtil.generate_random_move_gomoku(boardToSimulate)
 			boardToSimulate.play_move_gomoku(newMove, boardToSimulate.current_player)
 			gameCheck = boardToSimulate.check_game_end_gomoku()
