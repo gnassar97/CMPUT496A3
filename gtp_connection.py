@@ -298,17 +298,22 @@ class GtpConnection():
                 self.respond("resign")
             return
         move = self.go_engine.get_move(self.board, color)
-        if move == PASS:
+
+        move = self.go_engine.simulate(self.board,self.policytype)
+        if move == None:
             self.respond("pass")
             return
-        move_coord = point_to_coord(move, self.board.size)
-        move_as_string = format_point(move_coord)
-        if self.board.is_legal_gomoku(move, color):
-            self.board.play_move_gomoku(move, color)
+        moveOutput = ""
+        for i in move[0]:
+            print(i)
+            move_coord = point_to_coord(i, self.board.size)
+            move_as_string = format_point(move_coord)
+            moveOutput += " " + move_as_string
+            print(moveOutput)
+            self.board.play_move_gomoku(i, color)
             self.respond(move_as_string)
-        else:
-            self.respond("illegal move: {}".format(move_as_string))
-
+            return 
+        
     def gogui_rules_game_id_cmd(self, args):
         self.respond("Gomoku")
     
