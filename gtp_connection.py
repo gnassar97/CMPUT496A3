@@ -239,6 +239,7 @@ class GtpConnection():
             self.respond("unknown")
     def policy_moves_cmd(self, args):
         #Rough working of simulate.
+        outputString = ""
         N = self.go_engine.simulate(self.board,self.policytype)
         print(N)
         if N == None:
@@ -246,10 +247,12 @@ class GtpConnection():
             return
         moveOutput = ""
         for i in N[0]:
+            
             move_coord = point_to_coord(i, self.board.size)
             move_as_string = format_point(move_coord)
             moveOutput = moveOutput + " " + move_as_string
             outputString = N[1] + moveOutput
+
         self.respond(outputString)
     def play_cmd(self, args):
         """

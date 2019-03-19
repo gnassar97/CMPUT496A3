@@ -11,6 +11,7 @@ import sys
 import operator
 
 winTypeWin = False
+winTypeMoves = []
 winTypeBlockWin = False
 BlockWinMoves = []
 winTypeOpenFour = False
@@ -33,7 +34,7 @@ class Gomoku():
 
 
 	def simulate(self,board,policytype):
-		global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour
+		global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour, BlockWinMoves, OpenFourMoves, BlockOpenFourMoves
 		#Testing simulate with pseudocode with gtpconn.
 		self.sim_rule = policytype
 		dictionaryWinCount = {}
@@ -94,13 +95,19 @@ class Gomoku():
 			#For the rest 3 we need to display the moves that caused the win to be blocked too?..
 			elif winTypeBlockWin == True:
 				winTypeBlockWin = False
-				return BlockWinMoves, 'BlockWin'
+				z = BlockWinMoves.copy()
+				BlockWinMoves.clear()
+				return z, 'BlockWin'
 			elif winTypeOpenFour == True:
 				winTypeOpenFour = False
-				return OpenFourMoves, 'OpenFour'
+				x = OpenFourMoves.copy()
+				OpenFourMoves.clear()
+				return x, 'OpenFour'
 			elif winTypeBlockOpenFour == True:
 				winTypeBlockOpenFour = False
-				return BlockOpenFourMoves, 'BlockOpenFour'
+				y = BlockOpenFourMoves.copy()
+				BlockOpenFourMoves.clear()
+				return y, 'BlockOpenFour'
 			else:
 				maxValue = max(dictionaryWinCount.items(), key=operator.itemgetter(1))[1]
 				#print("RANDOM")
@@ -110,7 +117,7 @@ class Gomoku():
 						max_win.append(i)
 						#max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
 						#print(max_win)
-				return max_win, 'Random'
+				return sorted(max_win), 'Random'
 		else:
 			pass
 
@@ -150,6 +157,7 @@ class Gomoku():
 				#print("CurrentPlayerWon, adding in win",gameCheck[1], color)
 				win_count += 1
 				winTypeWin = True
+				return
 		#OTHERWISE USE WHILE LOOP TO CHECK IF WE CAN BLOCK THE OPP WIN/OPEN FOUR/BLOCK OPEN FOUR..
 		legal_moves = GoBoardUtil.generate_legal_moves_gomoku(boardToSimulate)
 		if len(legal_moves) == 0:
@@ -178,10 +186,8 @@ class Gomoku():
 				if(winDirection == 'vertical'):
 					moveNeighbours = boardToSimulate._neighbors(move)
 					v1 = boardToSimulate.is_legal_gomoku(moveNeighbours[2],playerSimulationColor)
-					print(v1)
 
 					v2 = boardToSimulate.is_legal_gomoku(moveNeighbours[3],playerSimulationColor)
-					print(v2)
 					if v1 == True or v2 == True:
 						if move not in OpenFourMoves:
 							OpenFourMoves.append(move)
