@@ -119,7 +119,8 @@ class Gomoku():
 						max_win.append(i)
 						#max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
 						#print(max_win)
-				return max_win.sorted(), 'Random'
+				X = sorted(max_win)
+				return X, 'Random'
 		else:
 			pass
 
