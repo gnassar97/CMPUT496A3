@@ -34,7 +34,7 @@ class Gomoku():
 
 
 	def simulate(self,board,policytype):
-		global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour, BlockWinMoves, OpenFourMoves, BlockOpenFourMoves
+		global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour, BlockWinMoves, OpenFourMoves, BlockOpenFourMoves, winTypeMoves
 		#Testing simulate with pseudocode with gtpconn.
 		self.sim_rule = policytype
 		dictionaryWinCount = {}
@@ -91,7 +91,9 @@ class Gomoku():
 						max_win.append(i)
 						#max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
 						#print(max_win)
-				return max_win, 'Win'
+				x = winTypeMoves.copy()
+				winTypeMoves.clear()
+				return x, 'Win'
 			#For the rest 3 we need to display the moves that caused the win to be blocked too?..
 			elif winTypeBlockWin == True:
 				winTypeBlockWin = False
@@ -117,7 +119,7 @@ class Gomoku():
 						max_win.append(i)
 						#max_win [key for key in dictionaryWinCount.keys() if dictionaryWinCount[key]==maxValue]
 						#print(max_win)
-				return sorted(max_win), 'Random'
+				return max_win.sorted(), 'Random'
 		else:
 			pass
 
@@ -144,7 +146,7 @@ class Gomoku():
 				break
 		return win_count
 	def simulateMoveRuleBased(self, move, board, color):
-		global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour, BlockWinMoves, OpenFourMoves, BlockOpenFourMoves
+		global winTypeWin, winTypeBlockOpenFour, winTypeBlockWin, winTypeOpenFour, BlockWinMoves, OpenFourMoves, BlockOpenFourMoves, winTypeMoves
 		boardToSimulate = board.copy()
 		win_count = 0
 		playerSimulationColor = board.current_player
@@ -157,6 +159,8 @@ class Gomoku():
 				#print("CurrentPlayerWon, adding in win",gameCheck[1], color)
 				win_count += 1
 				winTypeWin = True
+				if move not in winTypeMoves:
+					winTypeMoves.append(move)
 				return
 		#OTHERWISE USE WHILE LOOP TO CHECK IF WE CAN BLOCK THE OPP WIN/OPEN FOUR/BLOCK OPEN FOUR..
 		legal_moves = GoBoardUtil.generate_legal_moves_gomoku(boardToSimulate)
