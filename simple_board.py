@@ -456,6 +456,27 @@ class SimpleGoBoard(object):
         
         return False
 
+    def point_check_game_end_gomoku_a3(self, point,color,n):
+        """
+            Check if the point causes the game end for the game of Gomoko.
+            """
+        # check horizontal
+        if self._point_direction_check_connect_gomoko(point, 1,color,n):
+            return True, 'horizontal'
+        
+        # check vertical
+        if self._point_direction_check_connect_gomoko(point, self.NS,color,n):
+            return True, 'vertical'
+        
+        # check y=x
+        if self._point_direction_check_connect_gomoko(point, self.NS + 1,color,n):
+            return True, 'diagonal'
+        
+        # check y=-x
+        if self._point_direction_check_connect_gomoko(point, self.NS - 1,color,n):
+            return True, 'antidiagonal' 
+        
+        return False, 'loss'
     # def check_game_end_gomoku(self):
     #     """
     #         Check if the game ends for the game of Gomoku.

@@ -162,9 +162,19 @@ class Gomoku():
 				print("BLOCKWIN" + str(BlockWinMoves))
 				return
 
-			elif boardToSimulate.point_check_game_end_gomoku(move,playerSimulationColor,4) == True:
-				if move not in OpenFourMoves:
-					OpenFourMoves.append(move)
+			elif boardToSimulate.point_check_game_end_gomoku_a3(move,playerSimulationColor,4)[0] == True:
+				
+				winDirection = boardToSimulate.point_check_game_end_gomoku_a3(move,playerSimulationColor,4)[1]
+				if(winDirection == 'horizontal'):
+					#How to check empty point to move's left and right.
+					#if there is a single empty point. we add to list.
+					#if no empty point we dont add.
+					moveNeighbours = boardToSimulate._neighbors(move)
+					h1 = boardToSimulate.is_legal_gomoku(moveNeighbours[0],playerSimulationColor)
+					h2 = boardToSimulate.is_legal_gomoku(moveNeighbours[1],playerSimulationColor)
+					if h1 == True or h2 == True:
+						if move not in OpenFourMoves:
+							OpenFourMoves.append(move)
 				winTypeOpenFour = True
 				print("OPENFOUR" + str(OpenFourMoves))
 				continue 
